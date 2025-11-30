@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>I ♥ You — Cute Page</title>
+<style>
+  :root{
+    --bg1: #fff6fb;
+    --bg2: #fff0f8;
+    --accent: #ff6fa8;
+    --accent-2: #ffb7d9;
+    --muted: #6b7280;
+  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto;display:flex;align-items:center;justify-content:center;}
+  .card{
+    width: min(920px, 94vw);
+    max-width:920px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,247,250,0.78));
+    border-radius:20px;
+    box-shadow: 0 18px 50px rgba(19,12,40,0.08);
+    padding:36px;
+    position:relative;
+    overflow:hidden;
+  }
+  .top-row{display:flex;gap:18px;align-items:center;justify-content:space-between;}
+  .title {
+    display:flex;align-items:center;gap:14px;
+  }
+  .logo {
+    width:68px;height:68px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(255,110,170,0.18);
+    transform:translateY(-2px);
+  }
+  .logo svg{filter: drop-shadow(0 6px 14px rgba(255,110,170,0.18));}
+  h1{font-size:24px;margin:0;color:#2b2b36;letter-spacing:0.6px}
+  p.lead{margin:8px 0 0 0;color:var(--muted);font-size:14px}
+
+  .center {
+    margin-top:22px;display:flex;gap:28px;align-items:center;
+    justify-content:center;flex-wrap:wrap;
+  }
+
+  /* Big heart button */
+  .heart-btn{
+    width:220px;height:220px;border-radius:50%;display:grid;place-items:center;
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.45), rgba(255,255,255,0.05)),
+                linear-gradient(180deg,#ff6fa8,#ff3d8a);
+    box-shadow: 0 22px 60px rgba(255,100,150,0.15), inset 0 -6px 20px rgba(0,0,0,0.06);
+    border:none;cursor:pointer;position:relative;outline:none;
+    transition: transform 220ms cubic-bezier(.2,.9,.3,1);
+    transform-origin:center;
+  }
+  .heart-btn:active{transform:scale(0.95)}
+  .heart{
+    width:110px;height:110px;display:block;position:relative;
+    transform:rotate(-45deg);
+  }
+  .heart::before,.heart::after{
+    content:"";position:absolute;width:110px;height:110px;border-radius:50%;background:linear-gradient(180deg,#fff0f5,rgba(255,255,255,0.06));
+    top:0;left:0;box-shadow:0 6px 18px rgba(0,0,0,0.06);
+  }
+  .heart::before{left:50%;}
+  .heart-shape{
+    position:absolute;inset:0;background:linear-gradient(180deg,#fff8fb,rgba(255,255,255,0.05));
+    mix-blend-mode:overlay;border-radius:6px;opacity:0.12;
+    transform:rotate(45deg);
+  }
+
+  /* pulse */
+  .pulse {
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:220px;height:220px;border-radius:50%;
+    pointer-events:none;
+  }
+  .pulse::after{
+    content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 6px rgba(255,110,170,0.06);animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse{0%{transform:scale(0.95);opacity:0.9}50%{transform:scale(1.08);opacity:0.2}100%{transform:scale(0.95);opacity:0.0}}
+
+  /* message box */
+  .message-box{
+    min-width:360px;max-width:440px;padding:18px;border-radius:12px;background:rgba(255,255,255,0.85);
+    box-shadow:0 10px 30px rgba(20,25,40,0.05);text-align:center;
+  }
+  .big-msg{font-size:28px;margin:6px 0;color:#2a2a34}
+  .sub-msg{color:var(--muted);font-size:14px;margin:6px 0 0 0;min-height:36px}
+
+  .controls{display:flex;gap:10px;justify-content:center;margin-top:12px}
+  .btn{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+  .btn.copy{background:#fff;border:1px solid rgba(0,0,0,0.06);color:#333}
+  .btn.share{background:linear-gradient(90deg,#ff7ab0,#d67bff);color:white}
+  .small-note{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+
+  /* small floating hearts */
+  .float-heart{
+    position:absolute;width:26px;height:26px;pointer-events:none;will-change:transform,opacity;
+    transform:rotate(-45deg);
+  }
+
+  /* confetti canvas full-screen */
+  #confettiCanvas{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9999}
+  /* cute footer */
+  .footer{position:absolute;left:18px;bottom:18px;color:var(--muted);font-size:13px}
+  .footer a{color:var(--accent);text-decoration:none;font-weight:700}
+  /* responsiveness */
+  @media (max-width:720px){
+    .center{flex-direction:column-reverse}
+    .heart-btn{width:170px;height:170px}
+    .heart{width:84px;height:84px}
+    .message-box{width:88%}
+  }
+</style>
+</head>
+<body>
+<div class="card" role="main" aria-label="Cute I love you card">
+  <div class="top-row">
+    <div class="title">
+      <div class="logo" aria-hidden="true">
+        <!-- tiny heart icon -->
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 21s-7.5-4.9-9.2-8.1C1.5 9.7 4.1 6 7.5 6c1.9 0 3 1 4.5 2.7C13.5 7 14.6 6 16.5 6 19.9 6 22.5 9.7 21.2 12.9 19.5 16.1 12 21 12 21z" fill="#fff" />
+        </svg>
+      </div>
+      <div>
+        <h1>I made this for you</h1>
+        <p class="lead">Cute, tiny webpage to say something big.</p>
+      </div>
+    </div>
+    <div class="small-note">Click the heart ❤️ for a surprise</div>
+  </div>
+
+  <div class="center">
+    <button class="heart-btn" id="heartBtn" aria-pressed="false" title="Click to send love">
+      <span class="pulse" aria-hidden="true"></span>
+      <span class="heart" aria-hidden="true">
+        <span class="heart-shape"></span>
+      </span>
+    </button>
+
+    <div class="message-box" aria-live="polite">
+      <div class="big-msg" id="mainText">I ♥ You</div>
+      <div class="sub-msg" id="subText">Tap the heart to make confetti — and keep this forever.</div>
+
+      <div class="controls" aria-hidden="false">
+        <button class="btn copy" id="copyBtn">Copy message</button>
+        <button class="btn share" id="shareBtn">Share</button>
+      </div>
+      <div class="small-note">Hold the heart to generate floating hearts. Move mouse to scatter them.</div>
+    </div>
+  </div>
+
+  <div class="footer">Made with lots of ❤️ — <a href="#" id="credit">Open this on someone you love</a></div>
+</div>
+
+<canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+<script>
+/* Cute I Love You page
+   - Heart button toggles confetti + typewriter message reveal
+   - Click & hold spawns floating hearts from center
+   - Mouse moves spawn tiny hearts that fade
+   - Copy & Share actions
+   - Gentle chime using WebAudio (tiny pluck)
+*/
+
+/* -------- utilities -------- */
+const $ = q => document.querySelector(q);
+
+// tiny audio pluck
+function playPluck(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = 660;
+    g.gain.value = 0;
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+    // quick envelope
+    g.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+    o.stop(ctx.currentTime + 0.6);
+  }catch(e){ /* ignore audio errors on very old browsers */ }
+}
+
+/* -------- confetti canvas -------- */
+const c = document.getElementById('confettiCanvas');
+const ctx = c.getContext('2d');
+let W = c.width = innerWidth;
+let H = c.height = innerHeight;
+function resizeCanvas(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+
+const confettis = [];
+function spawnConfetti(x = W/2, y = H/2, count = 34){
+  for(let i=0;i<count;i++){
+    confettis.push({
+      x: x + (Math.random()-0.5)*80,
+      y: y + (Math.random()-0.5)*40,
+      vx: (Math.random()-0.5)*6,
+      vy: Math.random()*-6 - 2,
+      ay: 0.18 + Math.random()*0.08,
+      life: 80 + Math.random()*60,
+      size: 6 + Math.random()*8,
+      rot: Math.random()*Math.PI*2,
+      color: ['#ff6fa8','#ffd0e6','#ffb7d9','#ff9ccf','#ffd7ef'][Math.floor(Math.random()*5)]
+    });
+  }
+}
+
+/* confetti animation */
+function updateConfetti(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=confettis.length-1;i>=0;i--){
+    const p = confettis[i];
+    p.vy += p.ay;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.rot += 0.06;
+    p.life--;
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+    ctx.restore();
+    if(p.life <= 0 || p.y > H+40) confettis.splice(i,1);
+  }
+  requestAnimationFrame(updateConfetti);
+}
+requestAnimationFrame(updateConfetti);
+
+/* -------- floating hearts (DOM) -------- */
+function makeFloatHeart(x,y,scale=1,delay=0){
+  const el = document.createElement('div');
+  el.className = 'float-heart';
+  el.style.left = (x - 13) + 'px';
+  el.style.top = (y - 13) + 'px';
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(0) scale(' + scale + ') rotate(-45deg)';
+  el.innerHTML = '';
+  // using CSS background for heart shape
+  el.style.background = `linear-gradient(180deg,#fff0f6,#ffdff0)`;
+  el.style.width = 26*scale + 'px';
+  el.style.height = 26*scale + 'px';
+  el.style.borderRadius = '6px';
+  el.style.boxShadow = '0 8px 22px rgba(255,90,140,0.08)';
+  el.style.zIndex = 9999;
+  el.style.transition = 'transform 900ms cubic-bezier(.2,.9,.3,1), opacity 900ms';
+  document.body.appendChild(el);
+  requestAnimationFrame(()=>{
+    el.style.opacity = 1;
+    el.style.transform = `translateY(-120px) scale(${scale}) rotate(-45deg)`;
+  });
+  setTimeout(()=> {
+    el.style.opacity = 0;
+    el.style.transform = `translateY(-200px) scale(${scale*0.8}) rotate(-45deg)`;
+    setTimeout(()=> el.remove(), 1100);
+  }, 300 + delay);
+}
+
+/* cursor hearts on move (throttle) */
+let lastMove = 0;
+window.addEventListener('mousemove', (e)=>{
+  const now = performance.now();
+  if(now - lastMove > 120){
+    lastMove = now;
+    makeFloatHeart(e.clientX, e.clientY, 0.7, 0);
+  }
+});
+
+/* long-press to continuously spawn hearts at heart center */
+const heartBtn = $('#heartBtn');
+let holdInterval = null;
+let isHeld = false;
+
+heartBtn.addEventListener('pointerdown', (ev)=>{
+  isHeld = true;
+  playPluck();
+  const rect = heartBtn.getBoundingClientRect();
+  holdInterval = setInterval(()=> {
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    makeFloatHeart(cx + (Math.random()-0.5)*40, cy + (Math.random()-0.5)*30, 0.9 + Math.random()*0.6, 0);
+  }, 180);
+});
+window.addEventListener('pointerup', ()=> {
+  isHeld = false;
+  if(holdInterval){ clearInterval(holdInterval); holdInterval = null; }
+});
+
+/* single click => confetti + typewriter reveal + sound */
+const mainText = $('#mainText');
+const subText = $('#subText');
+let revealed = false;
+heartBtn.addEventListener('click', (ev)=>{
+  const rect = heartBtn.getBoundingClientRect();
+  spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/2, 36);
+  playPluck();
+  if(!revealed){
+    revealed = true;
+    showTypewriterMessage("I LOVE YOU", "You make my world brighter every single day ✨");
+  } else {
+    // small playful bounce
+    heartBtn.animate([{ transform:'scale(1)' },{ transform:'scale(1.06)' },{ transform:'scale(1)'}], { duration: 320 });
+  }
+});
+
+/* typewriter */
+function showTypewriterMessage(big, sub){
+  // animate big text letter-by-letter
+  mainText.textContent = "";
+  subText.textContent = "";
+  const letters = Array.from(big);
+  let i = 0;
+  const interval = setInterval(()=>{
+    mainText.textContent += letters[i];
+    i++;
+    if(i >= letters.length){
+      clearInterval(interval);
+      // after big done, show sub gently
+      setTimeout(()=> {
+        subText.style.opacity = 0;
+        subText.textContent = sub;
+        subText.animate([{ opacity:0, transform:'translateY(6px)' },{ opacity:1, transform:'translateY(0)' }], { duration:420, easing:'cubic-bezier(.2,.9,.3,1)' });
+        subText.style.opacity = 1;
+      }, 240);
+    }
+  }, 90);
+}
+
+/* copy & share */
+const copyBtn = $('#copyBtn');
+copyBtn.addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText("I LOVE YOU ❤️ — " + (mainText.textContent || "I LOVE YOU"));
+    copyBtn.textContent = "Copied!";
+    setTimeout(()=> copyBtn.textContent = "Copy message", 1200);
+  }catch(e){
+    copyBtn.textContent = "Nope";
+    setTimeout(()=> copyBtn.textContent = "Copy message", 1200);
+  }
+});
+
+const shareBtn = $('#shareBtn');
+shareBtn.addEventListener('click', async ()=>{
+  const shareData = { title: 'I ♥ You', text: (mainText.textContent || "I LOVE YOU") + " — sent with a cute page 💌", url: location.href };
+  if(navigator.share){
+    try{
+      await navigator.share(shareData);
+    }catch(e){}
+  } else {
+    // fallback: copy a short sharable message
+    try{
+      await navigator.clipboard.writeText(shareData.text + " " + shareData.url);
+      shareBtn.textContent = "Copied link!";
+      setTimeout(()=> shareBtn.textContent = "Share", 1200);
+    }catch(e){
+      shareBtn.textContent = "Can't share";
+      setTimeout(()=> shareBtn.textContent = "Share", 1200);
+    }
+  }
+});
+
+/* credit link -> copy a sweet message for recipients */
+$('#credit').addEventListener('click', (e)=>{
+  e.preventDefault();
+  navigator.clipboard.writeText("Open this : " + location.href).then(()=> {
+    alert("Copied: I Love You Momma ❤️");
+  }).catch(()=> { location.href = location.href; });
+});
+
+/* small gentle intro: float a couple hearts */
+setTimeout(()=> {
+  const rect = heartBtn.getBoundingClientRect();
+  makeFloatHeart(rect.left + rect.width/2, rect.top + rect.height/2, 1.1, 0);
+  makeFloatHeart(rect.left + rect.width/2 - 40, rect.top + rect.height/2 + 10, 0.9, 160);
+}, 600);
+
+/* accessible: press Enter when focused on heart */
+heartBtn.addEventListener('keydown', (e)=> { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); heartBtn.click(); } });
+
+</script>
+</body>
+</html>
